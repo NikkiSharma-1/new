@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Expense Tracker</title>
+</head>
+<body>
+    <header>
+        <h1> Sign Up</h1>
+    </header>
+    <form id="my-form" onsubmit="saveLocal(event)">
+        <h2>Add User</h2>
+        <div> 
+            <label for="name">Name:</label><br>
+         <input type="text" id="name" required/>
+        </div>
+        <div>
+            <label for="email">Email:</label><br>
+            <input type="text" id="email" required/>
+        </div>
+        <div>
+        <label for="password">Password:</label><br>
+        <input type="password" id="password" required/>
+        </div><br>
+        <input class="btn" type="submit" value="SignUp">
+        <div>
+            <P>Already a user? <input class="btn1" type="submit" value="SignIn"></P>
+        </div>
+    </form>
+     <script>
+        const btn=document.querySelector('.btn');
+        const btn1=document.querySelector('.btn1');
+        btn.style.background="green";
+        btn1.style.background="pink";
+        function saveLocal(event)
+        {
+         event.preventDefault();
+         const name=event.target.name.value;
+         const email=event.target.email.value;
+         const password=event.target.password.value;
+         const obj={
+         name:name,
+         email:email,
+         password:password
+         }
+         localStorage.setItem(obj.email,JSON.stringify(obj));
+         showNewUserOnScreen(obj);
+        }
+        window.addEventListener("DOMContentLoaded", () => {
+            const localStorageObj = localStorage;
+            const localstoragekeys  = Object.keys(localStorageObj)
+
+            for(var i =0; i< localstoragekeys.length; i++){
+                const key = localstoragekeys[i]
+                const userDetailsString = localStorageObj[key];
+                const userDetailsObj = JSON.parse(userDetailsString);
+                showNewUserOnScreen(userDetailsObj)
+            }
+        })
+        function showNewUserOnScreen(user){
+            document.getElementById('email').value = '';
+            document.getElementById('username').value = '';
+            document.getElementById('password').value ='';
+        }
+     </script>    
+   
+</body>
+</html>
