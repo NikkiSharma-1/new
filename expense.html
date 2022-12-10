@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Expense</title>
+    <script src="./app.js" defer></script>
+</head>
+<body>
+    <form  onsubmit="saveToLocalStorage(event)">
+        <label> Choose Expenseamount</label>
+        <input id='amount' type="number" required/>
+        <label> Choose Description</label>
+        <input id='des' type="text"  required/>
+        <label> Choose a category</label>
+        <select id="category">
+        <option>Fuel</option>
+        <option>Food</option>
+        <option>Electricity</option>
+        <option>Movie</option></select>
+        <button>Add Expense</button>
+    </form>
+    <ul id='listOfUsers'></ul>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.1.2/axios.min.js"></script>
+    <script>
+        async function saveToLocalStorage(event) {
+            event.preventDefault();
+            const amount = event.target.amount.value;
+            const description = event.target.des.value;
+            const category = event.target.category.value;
+            const obj = {
+                amount,
+               description,
+                category
+            }
+         try{
+            const response=await axios.post("http://localhost:3000/user/ExpenseData" ,obj)
+                showNewUserOnScreen(response.data);
+                console.log(response);
+         }
+            catch(err){
+                console.log(err);
+            }
+        }
+        window.addEventListener("DOMContentLoaded", () => {
+            async function getData(){
+                try{
+                const response=await axios.get("http://localhost:3000/user/ExpenseData")
+                console.log(response)
+
+                for(var i=0;i<response.data.length;i++)
+                {
+                    showNewUserOnScreen(response.data[i]);
+                }
+            }
+            catch(err){
+                console.log(err);
+            }
+            }
+        })
+        function showNewUserOnScreen(user){
+            document.getElementById('des').value = '';
+            document.getElementById('amount').value = '';
+            document.getElementById('category').value ='';
+            if(localStorage.getItem(user.des) !== null){
+                removeUserFromScreen(user.des)
+            }
+
+            const parentNode = document.getElementById('listOfUsers');
+            const childHTML = `<li id=${user._id}> ${user.amount} - ${user.description}-${user.category}
+                                    <button onclick=deleteUser('${user._id}')> Delete Expense </button>
+                                    <button onclick=editUserDetails('${user.description}','${user.amount}','${user.category}','${user._id}')>Edit Expense </button>
+                                 </li>`
+            parentNode.innerHTML = parentNode.innerHTML + childHTML;
+        }
+        //Edit Expense
+        function editUserDetails(description,amount,category,userId){
+            document.getElementById('des').value = description;
+            document.getElementById('amount').value = amount;
+            document.getElementById('category').value =category;
+            deleteUser(userId)
+         }
+        // deleteExpense
+       async function deleteUser(userId){
+        try{
+            const response=await axios.delete(`http://localhost:3000/user/ExpenseData/${userId}`)
+                removeUserFromScreen(userId);
+        }
+        
+            catch(err) {
+                console.log(err);
+            }
+        }
+        function removeUserFromScreen(userId){
+            const parentNode = document.getElementById('listOfUsers');
+            const childNodeToBeDeleted = document.getElementById(userId);
+            if(childNodeToBeDeleted) {
+                parentNode.removeChild(childNodeToBeDeleted)
+            }
+        }
+
+</script>
+</body>
+</html>
