@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Expense Tracker</title>
+    <script src="./database.js" defer></script>
+</head>
+<body>
+    <header>
+        <h1>LogIn</h1>
+    </header>
+    <form id="my-form" onsubmit="saveLocal(event)">
+        <div>
+            <label for="email">Email:</label><br>
+            <input type="text" id="email" required/>
+        </div>
+        <div>
+        <label for="password">Password:</label><br>
+        <input type="password" id="password" required/>
+        </div><br>
+        <input class="btn" type="submit" value="SignUp">
+        <div>
+            <P>New User? <a href="./sign.html">SignUp</a></P>
+        </div>
+    </form>
+     <script>
+        const btn=document.querySelector('.btn');
+        btn.style.background="green";
+        function saveLocal(event)
+        {
+         event.preventDefault();
+         const email=event.target.email.value;
+         const password=event.target.password.value;
+         const obj={
+         email:email,
+         password:password
+         }
+         localStorage.setItem(obj.email,JSON.stringify(obj));
+         showNewUserOnScreen(obj);
+        }
+        window.addEventListener("DOMContentLoaded", () => {
+            const localStorageObj = localStorage;
+            const localstoragekeys  = Object.keys(localStorageObj)
+
+            for(var i =0; i< localstoragekeys.length; i++){
+                const key = localstoragekeys[i]
+                const userDetailsString = localStorageObj[key];
+                const userDetailsObj = JSON.parse(userDetailsString);
+                showNewUserOnScreen(userDetailsObj)
+            }
+        })
+        function showNewUserOnScreen(user){
+            document.getElementById('email').value = '';
+            document.getElementById('password').value ='';
+        }
+     </script>    
+   
+</body>
+</html>
