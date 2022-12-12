@@ -6,6 +6,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>User Expense</title>
     <script src="./app.js" defer></script>
+    <style>
+        .btn1{
+               text-align: right;
+               color: blueviolet;
+        }
+    </style>
 </head>
 <body>
     <form  onsubmit="saveToLocalStorage(event)">
@@ -20,6 +26,7 @@
         <option>Electricity</option>
         <option>Movie</option></select>
         <button>Add Expense</button>
+        <button class="btn1"><a href="https://rzp.io/l/1DtwQxiGn">Buy Premium Membership</a></button>
     </form>
     <ul id='listOfUsers'></ul>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.1.2/axios.min.js"></script>
