@@ -1,6 +1,9 @@
 const express=require('express');
 const mysql=require('mysql');
 const user=require('./user');
+const payment=require('./payment');
+const url=require('./url');
+const uuid=require('./uuid');
 
 const db=require('./database');
 
@@ -26,4 +29,14 @@ db.execute('SELECT * FROM node_complete.expense' ,(err,result) => {
     });
 
 const app=express();
+app.get('SELECT * FROM node_complete.forgot_password' ,(req,res) =>{
+    let sql="CREATE DATABASE Forgot_Password(uuid LONGTEXT(255) ,UserId VARCHAR(255) ,isActive BOOLEAN(), PRIMARY KEY(uuid))";
+
+    db.query(sql ,(err, result) => {
+        if(err) {
+            console.log(err);
+        }
+        console.log(result);
+    });
+});
 app.listen(4000);
