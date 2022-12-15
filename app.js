@@ -1,42 +1,37 @@
-const express=require('express');
-const mysql=require('mysql');
-const user=require('./user');
-const payment=require('./payment');
-const url=require('./url');
-const uuid=require('./uuid');
+const path = require('path');
+const helmet=require('helmet');
+const morgan=require('morgan');
+const compression=require('compression');
+const express = require('express');
+var cors = require('cors')
+const sequelize = require('./database');
+const User = require('./models/user');
+const Expense = require('./models/expense');
 
-const db=require('./database');
+const userRoutes = require('./user')
+
+const app = express();
+const dotenv = require('dotenv');
+
+dotenv.config();
+app.use(helmet());
+app.use(compression());
+app.use(morgan('combined'));
+
+app.use(cors());
+
+app.use(express.json());  
+
+app.use('/user', userRoutes)
 
 User.hasMany(Expense);
-Expense.belongsTo(User); 
+Expense.belongsTo(User);
 
-db.execute('SELECT * FROM node_complete.login_user' ,(err,result) => {
-if(result){
-    console.log(result);
-}
-else{
-    console.log(err);
-}
-});
 
-db.execute('SELECT * FROM node_complete.expense' ,(err,result) => {
-    if(result){
-        console.log(result);
-    }
-    else{
+sequelize.sync()
+    .then(() => {
+        app.listen(3000);
+    })
+    .catch(err => {
         console.log(err);
-    }
-    });
-
-const app=express();
-app.get('SELECT * FROM node_complete.forgot_password' ,(req,res) =>{
-    let sql="CREATE DATABASE Forgot_Password(uuid LONGTEXT(255) ,UserId VARCHAR(255) ,isActive BOOLEAN(), PRIMARY KEY(uuid))";
-
-    db.query(sql ,(err, result) => {
-        if(err) {
-            console.log(err);
-        }
-        console.log(result);
-    });
-});
-app.listen(4000);
+    })
