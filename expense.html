@@ -48,8 +48,15 @@
     <button id="rzp-button1">Buy Premium</button>
     <button onclick="download()" id="downloadexpense">Download File</button>
     <section class="pagination">
-        <a href="/?page=1">1</a>
-        <a href="/?page=2">2</a>
+        <form onclick="setPages()">
+           <label>Rows per page:</label>
+            <select id="select">
+                <option>5</option>
+                <option selected>10</option>
+                <option>15</option>
+                <option>20</option>
+            </select>
+           </form>
     </section>
     <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
     <script src='./expense.html'></script>
